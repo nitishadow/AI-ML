@@ -96,8 +96,3 @@ certifications = float(input("Certifications: "))
 new_data = np.array([[experience, team_lead_experience, project_manager_experience, certifications]])
 predicted_salary = model(new_data, wf, bf)
 print(f"Predicted Salary for given input: {predicted_salary[0]:.2f} INR")
-
-
-
-
-
