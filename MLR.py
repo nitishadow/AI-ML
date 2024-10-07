@@ -1,11 +1,45 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 
 
 dataset = pd.read_csv('SalaryMulti.csv')
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, -1].values
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+
+Predictions = model.predict(X_test)
+mse = mean_squared_error(y_test, Predictions)
+# print(mse)
+
+
+plt.figure(figsize=(8, 6))
+plt.scatter(y_test, Predictions, color='blue', label='Predicted vs Actual')
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--', label='Perfect Prediction')
+plt.xlabel("Actual Salary")
+plt.ylabel("Predicted Salary")
+plt.title("Actual vs Predicted Salary")
+plt.legend()
+plt.show()
+
+
+experience = float(input("Total Experience: "))
+team_lead_experience = float(input("Team Lead Experience: "))
+project_manager_experience = float(input("Project Manager Experience: "))
+certifications = float(input("Certifications: "))
+new_data = np.array([[experience, team_lead_experience, project_manager_experience, certifications]])
+predicted_salary = model.predict(new_data)
+print(f"Predicted Salary for given input: {predicted_salary[0]:.2f} INR")
+
+
 
 w = np.zeros(shape=(X.shape[1],))
 b = 0
@@ -67,38 +101,3 @@ print(f"Predicted Salary for given input: {predicted_salary[0]:.2f} INR")
 
 
 
-
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
-
-
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-
-Predictions = model.predict(X_test)
-mse = mean_squared_error(y_test, Predictions)
-# print(mse)
-
-
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, Predictions, color='blue', label='Predicted vs Actual')
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--', label='Perfect Prediction')
-plt.xlabel("Actual Salary")
-plt.ylabel("Predicted Salary")
-plt.title("Actual vs Predicted Salary")
-plt.legend()
-plt.show()
-
-
-experience = float(input("Total Experience: "))
-team_lead_experience = float(input("Team Lead Experience: "))
-project_manager_experience = float(input("Project Manager Experience: "))
-certifications = float(input("Certifications: "))
-new_data = np.array([[experience, team_lead_experience, project_manager_experience, certifications]])
-predicted_salary = model.predict(new_data)
-print(f"Predicted Salary for given input: {predicted_salary[0]:.2f} INR")
