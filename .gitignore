@@ -1,2 +1,5 @@
-Salary_dataset.csv
+.DS_Store
+.gitignore
+.idea
 SalaryMulti.csv
+Salary_dataset.csv
