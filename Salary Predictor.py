@@ -6,7 +6,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
 
-dataset = pd.read_csv('SalaryMulti.csv')
+dataset = pd.read_csv('Salary Data.csv')
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, -1].values
 
