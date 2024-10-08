@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -9,6 +10,8 @@ from sklearn.metrics import mean_squared_error
 dataset = pd.read_csv('Salary Data.csv')
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, -1].values
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
 
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
@@ -18,7 +21,7 @@ model.fit(X_train, y_train)
 
 Predictions = model.predict(X_test)
 mse = mean_squared_error(y_test, Predictions)
-# print(mse)
+print(mse)
 
 
 plt.figure(figsize=(8, 6))
@@ -76,7 +79,7 @@ def gradient_descent(X, y, w, b, k, iterations):
 
 wf, bf = gradient_descent(X, y, w, b, k, iterations)
 y_pred = model(X, wf, bf)
-# print(costfn(X, y, wf, bf))
+print(costfn(X, y, wf, bf))
 
 
 plt.figure(figsize=(8, 6))
