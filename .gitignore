@@ -1,7 +1,6 @@
 .DS_Store
 .gitignore
 .idea
-SalaryMulti.csv
-Salary_dataset.csv
+Salary Data.csv
 breast_cancer.csv
-fake_bills.csv
+Fake Bills Data.csv
