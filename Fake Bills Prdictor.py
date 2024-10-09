@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -18,9 +19,14 @@ def ScikitLearnMethod(X, y):
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
+    degree = 1
+    poly = PolynomialFeatures(degree)
+    X_train_poly = poly.fit_transform(X_train)
+    X_test_poly = poly.transform(X_test)
+
     model = LogisticRegression()
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
+    model.fit(X_train_poly, y_train)
+    y_pred = model.predict(X_test_poly)
 
     accuracy = accuracy_score(y_test, y_pred)
     print(f"Accuracy Score: {accuracy}.")
@@ -34,7 +40,8 @@ def ScikitLearnMethod(X, y):
 
     new_data = np.array([[diagonal, height_left, height_right, margin_low, margin_up, length]])
     new_data = scaler.transform(new_data)
-    y_newpred = model.predict(new_data)
+    new_data_poly = poly.transform(new_data)
+    y_newpred = model.predict(new_data_poly)
 
     if y_newpred == 1:
         print("Genuine")
