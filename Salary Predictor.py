@@ -14,7 +14,7 @@ scaler = StandardScaler()
 X = scaler.fit_transform(X)
 
 
-def ScikitLearnMethod(X, y):
+def ScikitLearnMethod(X, y, scaler):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
     model = LinearRegression()
     model.fit(X_train, y_train)
@@ -23,6 +23,16 @@ def ScikitLearnMethod(X, y):
     Predictions = model.predict(X_test)
     mse = mean_squared_error(y_test, Predictions)
     print(mse)
+
+
+    experience = float(input("Total Experience: "))
+    team_lead_experience = float(input("Team Lead Experience: "))
+    project_manager_experience = float(input("Project Manager Experience: "))
+    certifications = float(input("Certifications: "))
+    new_data = np.array([[experience, team_lead_experience, project_manager_experience, certifications]])
+    new_data = scaler.transform(new_data)
+    predicted_salary = model.predict(new_data)
+    print(f"Predicted Salary for given input: {predicted_salary[0]:.2f} INR")
 
 
     plt.figure(figsize=(8, 6))
@@ -35,19 +45,12 @@ def ScikitLearnMethod(X, y):
     plt.show()
 
 
-    experience = float(input("Total Experience: "))
-    team_lead_experience = float(input("Team Lead Experience: "))
-    project_manager_experience = float(input("Project Manager Experience: "))
-    certifications = float(input("Certifications: "))
-    new_data = np.array([[experience, team_lead_experience, project_manager_experience, certifications]])
-    predicted_salary = model.predict(new_data)
-    print(f"Predicted Salary for given input: {predicted_salary[0]:.2f} INR")
 
-
-def GradientDescentMethod(X, y):
+def GradientDescentMethod(X, y, scaler):
     w = np.zeros(shape=(X.shape[1],))
     b = 0
     k = 0.021
+    c = 1
     iterations = 1000
 
 
@@ -58,29 +61,39 @@ def GradientDescentMethod(X, y):
     def costfn(X, y, w, b):
         m = len(y)
         predictions = model(X, w, b)
-        cost = (1 / (2 * m)) * np.sum((predictions - y) ** 2)
+        cost = ((1 / (2 * m)) * np.sum((predictions - y) ** 2)) + ((c / (2 * m)) * np.sum(w ** 2))
         return cost
 
 
-    def gradientfn(X, y, w, b):
+    def gradientfn(X, y, w, b, c):
         m = len(y)
         predictions = model(X, w, b)
-        dj_dw = (1 / m) * np.dot(X.T, (predictions - y))
+        dj_dw = (1 / m) * np.dot(X.T, (predictions - y)) + (c / m) * w
         dj_db = (1 / m) * np.sum(predictions - y)
         return dj_dw, dj_db
 
 
-    def gradient_descent(X, y, w, b, k, iterations):
+    def gradient_descent(X, y, w, b, k, iterations, c):
         for i in range(iterations):
-            dj_dw, dj_db = gradientfn(X, y, w, b)
+            dj_dw, dj_db = gradientfn(X, y, w, b, c)
             w = w - k * dj_dw
             b = b - k * dj_db
         return w, b
 
 
-    wf, bf = gradient_descent(X, y, w, b, k, iterations)
+    wf, bf = gradient_descent(X, y, w, b, k, iterations, c)
     y_pred = model(X, wf, bf)
     print(costfn(X, y, wf, bf))
+
+
+    experience = float(input("Total Experience: "))
+    team_lead_experience = float(input("Team Lead Experience: "))
+    project_manager_experience = float(input("Project Manager Experience: "))
+    certifications = float(input("Certifications: "))
+    new_data = np.array([[experience, team_lead_experience, project_manager_experience, certifications]])
+    new_data = scaler.transform(new_data)
+    predicted_salary = model(new_data, wf, bf)
+    print(f"Predicted Salary for given input: {predicted_salary[0]:.2f} INR")
 
 
     plt.figure(figsize=(8, 6))
@@ -93,16 +106,7 @@ def GradientDescentMethod(X, y):
     plt.show()
 
 
-    experience = float(input("Total Experience: "))
-    team_lead_experience = float(input("Team Lead Experience: "))
-    project_manager_experience = float(input("Project Manager Experience: "))
-    certifications = float(input("Certifications: "))
-    new_data = np.array([[experience, team_lead_experience, project_manager_experience, certifications]])
-    predicted_salary = model(new_data, wf, bf)
-    print(f"Predicted Salary for given input: {predicted_salary[0]:.2f} INR")
+ScikitLearnMethod(X, y, scaler)
 
 
-ScikitLearnMethod(X, y)
-
-
-GradientDescentMethod(X, y)
+GradientDescentMethod(X, y, scaler)
