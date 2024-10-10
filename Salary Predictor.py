@@ -8,6 +8,7 @@ from sklearn.metrics import mean_squared_error
 
 
 dataset = pd.read_csv('Salary Data.csv')
+dataset = dataset.dropna()
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, -1].values
 scaler = StandardScaler()
@@ -105,7 +106,9 @@ def GradientDescentMethod(X, y, scaler):
     plt.show()
 
 
+
 ScikitLearnMethod(X, y, scaler)
+
 
 
 GradientDescentMethod(X, y, scaler)

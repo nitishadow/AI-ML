@@ -108,4 +108,5 @@ def GradientDescentMethod(X, y, scaler):
 ScikitLearnMethod(X, y, scaler)
 
 
+
 GradientDescentMethod(X, y, scaler)
