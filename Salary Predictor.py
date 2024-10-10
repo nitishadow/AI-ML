@@ -45,7 +45,6 @@ def ScikitLearnMethod(X, y, scaler):
     plt.show()
 
 
-
 def GradientDescentMethod(X, y, scaler):
     w = np.zeros(shape=(X.shape[1],))
     b = 0
