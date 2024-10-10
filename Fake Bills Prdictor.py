@@ -15,7 +15,7 @@ scaler = StandardScaler()
 X = scaler.fit_transform(X)
 
 
-def ScikitLearnMethod(X, y):
+def ScikitLearnMethod(X, y, scaler):
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
@@ -49,11 +49,13 @@ def ScikitLearnMethod(X, y):
         print("Not Genuine")
 
 
-def GradientDescentMethod(X, y):
+def GradientDescentMethod(X, y, scaler):
 
     w = np.zeros(shape=X.shape[1])
     b = 0
     k = 0.01
+    c = 1
+    threshold = 0.5
     iterations = 1000
 
     def model(X, w, b):
@@ -62,32 +64,27 @@ def GradientDescentMethod(X, y):
     def sigmoid(z):
         return 1 / (1 + np.exp(-z))
 
-    def costfn(X, y, w, b):
+    def gradientfn(X, y, w, b, c):
         m = len(y)
         z = model(X, w, b)
         y_pred = sigmoid(z)
-        cost = (-1 / m) * np.sum(y * np.log(y_pred) + (1 - y) * np.log(1 - y_pred))
-        return cost
-
-    def gradientfn(X, y, w, b):
-        m = len(y)
-        z = model(X, w, b)
-        y_pred = sigmoid(z)
-        dj_dw = 1 / m * np.dot(X.T, (y_pred - y))
+        dj_dw = 1 / m * np.dot(X.T, (y_pred - y)) + (c / m) * w
         dj_db = 1 / m * np.sum(y_pred - y)
         return dj_dw, dj_db
 
-    def gradient_descent(X, y, w, b, k, iterations):
+    def gradient_descent(X, y, w, b, k, c, iterations):
         for i in range(iterations):
-            dj_dw, dj_db = gradientfn(X, y, w, b)
+            dj_dw, dj_db = gradientfn(X, y, w, b, c)
             w = w - k * dj_dw
             b = b - k * dj_db
         return w, b
 
-    wf, bf = gradient_descent(X, y, w, b, k, iterations)
+    wf, bf = gradient_descent(X, y, w, b, k, c, iterations)
     z = model(X, wf, bf)
     y_pred = sigmoid(z)
-    print(f"Final Cost: {costfn(X, y, wf, bf)}.")
+    y_pred = (y_pred >= threshold).astype(int)
+    accuracy = np.mean(y_pred == y)
+    print(f"Accuracy: {accuracy}.")
 
     diagonal = float(input("Diagonal: "))
     height_left = float(input("Height Left: "))
@@ -99,13 +96,16 @@ def GradientDescentMethod(X, y):
     new_data = scaler.transform(new_data)
     z = model(new_data, wf, bf)
     y_newpred = sigmoid(z)
-    if y_newpred > 0.5:
+
+
+    if y_newpred > threshold:
         print("Genuine")
     else:
         print("Not Genuine")
 
 
-ScikitLearnMethod(X, y)
+
+ScikitLearnMethod(X, y, scaler)
 
 
-GradientDescentMethod(X, y)
+GradientDescentMethod(X, y, scaler)
