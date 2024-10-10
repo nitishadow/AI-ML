@@ -57,10 +57,10 @@ def GradientDescentMethod(X, y, scaler):
         return np.dot(X, w) + b
 
 
-    def costfn(X, y, w, b):
+    def mse(X, y, w, b):
         m = len(y)
         predictions = model(X, w, b)
-        cost = ((1 / (2 * m)) * np.sum((predictions - y) ** 2)) + ((c / (2 * m)) * np.sum(w ** 2))
+        cost = ((1 / m) * np.sum((predictions - y) ** 2))
         return cost
 
 
@@ -82,7 +82,7 @@ def GradientDescentMethod(X, y, scaler):
 
     wf, bf = gradient_descent(X, y, w, b, k, iterations, c)
     y_pred = model(X, wf, bf)
-    print(costfn(X, y, wf, bf))
+    print(mse(X, y, wf, bf))
 
 
     experience = float(input("Total Experience: "))
